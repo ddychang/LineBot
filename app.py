@@ -6,7 +6,7 @@ from linebot import (
 from linebot.exceptions import (
     InvalidSignatureError
 )
-from linebot.models import *
+from linebot.models import MessageEvent,TextMessage, TextSendMessage, MemberJoinedEvent import os
 
 #======python的函數庫==========
 import tempfile, os
@@ -16,7 +16,7 @@ import traceback
 #======python的函數庫==========
 
 app = Flask(__name__)
-static_tmp_path = os.path.join(os.path.dirname(__file__), 'static', 'tmp')
+
 # Channel Access Token
 line_bot_api = LineBotApi(os.getenv('CHANNEL_ACCESS_TOKEN'))
 # Channel Secret
@@ -25,7 +25,7 @@ handler = WebhookHandler(os.getenv('CHANNEL_SECRET'))
 
 
 
-
+user_state = {}  
 
 @handler.add(MessageEvent, message=TextMessage)
 def handle_message(event):
@@ -41,29 +41,30 @@ def handle_message(event):
 @app.route("/callback",methods=['POST'])
    
 def callback():
-signature = request.headers['X-Line-Signature']
-body = request.get_data(as_text=True)
-app.logger.info("Request body: " + body)
-try:
-handler. handle(body, signature)
-except InvalidSignatureError:
-abort (400)
-return 'OK'
+    signature = request.headers['X-Line-Signature']
+    body = request.get_data(as_text=True)
+    app.logger.info("Request body: " + body)
+    try:
+        handler. handle(body, signature)
+    except InvalidSignatureError:
+        abort (400)
+    return 'OK'
 
-@handler.add (MessageEvent, message=TextMessage)
+   @handler.add (MessageEvent, message=TextMessage)
+
 def handle_message(event) :
-user_id = event.source.user_id
-msg = event.message.text.strip()
+  user_id = event.source.user_id
+  msg = event.message.text.strip()
 
 if user_id not in user_state:
-user_state[user_id] = None
+   user_state[user_id] = None
 
 if msg == '介紹一下百合':
-user_stateluser_id］='百合'
+user_statel[user_id］='百合'
    line_bot_api.reply_message（event.reply_token,TextSendMessage（"請輸入想要查詢的關鍵字？"））
 else:
     current_state = user_state[user_id]
-    if current_state and msg in questions_answers (current_state]:
+    if current_state and msg in questions_answers [current_state]:
        reply = questions_answers [current_state][msg]
        1ine_bot_api.reply_message（event.reply_token, TextSendMessage（reply））
 else:
