@@ -38,7 +38,7 @@ def handle_message(event):
         "推薦一個百合作品": "《終將成為你》（Yagate Kimi ni Naru / Bloom Into You）：讲述了一个对浪漫情感感到迷茫的女孩和一个对她表达爱意的女孩之间的故事，是一部深刻而感人的作品。",
     }
     } 
-app.route("/callback",methods=['POST'])
+@app.route("/callback",methods=['POST'])
    
 def callback():
 signature = request.headers['X-Line-Signature']
