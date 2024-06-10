@@ -52,13 +52,37 @@ def handle_message(event):
     }
     } 
 app.route("/callback",methods=['POST'])
-    if msg in questions_answers:
-        #print(f"{english_word} 的中文翻譯是：{words_dict[english_word]}")
-    
-        line_bot_api.reply_message(event.reply_token, TextSendMessage(questions_answers[msg]))
-    else:
-        line_bot_api.reply_message(event.reply_token, TextSendMessage(msg))
-       
+   
+def callback():
+signature = request.headers['X-Line-Signature']
+body = request.get_data(as_text=True)
+app.logger.info("Request body: " + body)
+try:
+handler. handle(body, signature)
+except InvalidSignatureError:
+abort (400)
+return 'OK'
+
+@handler.add (MessageEvent, message=TextMessage)
+def handle_message(event) :
+user_id = event.source.user_id
+msg = event.message.text.strip()
+
+if user_id not in user_state:
+user_state[user_id] = None
+
+if msg == '介紹一下百合':
+user_stateluser_id］='百合'
+   line_bot_api.reply_message（event.reply_token,TextSendMessage（"請輸入想要查詢的關鍵字？"））
+else:
+    current_state = user_state[user_id]
+    if current_state and msg in questions_answers (current_state]:
+       reply = questions_answers [current_state][msg]
+       1ine_bot_api.reply_message（event.reply_token, TextSendMessage（reply））
+else:
+1ine_bot_api.reply_message（event.reply_token,TextSendMessage（”未找到相關答案，請重新輸入相對應的關鍵字"）)
+
+
          
 
 @handler.add(PostbackEvent)
